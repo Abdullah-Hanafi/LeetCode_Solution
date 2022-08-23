@@ -688,17 +688,17 @@ class Solution {
 
 ### 思路
 
-利用动态规划求解该题时，F(N)只与F(N-1)与F(N-2)有关，因此我们只需要用两个变量first，second来存储F(N-1)与F(N-2)，再创建一个变量third用于在迭代的过程中使first，second交替向前。举个例子，求解F(5)，当循环体**将要**求解F(3)时first存F(1)，second存F(2)，求完F(3)之后，将要求F(4)时，first，second交替向前变为first存F(2)，second存F(3)。具体见代码实现。
+利用动态规划求解该题时，F(N)只与F(N-1)与F(N-2)有关，因此我们只需要用两个变量first，second来存储F(N-1)与F(N-2)，再创建一个变量sum用于在迭代的过程中使first，second交替向前。举个例子，求解F(5)，当循环体**将要**求解F(3)时first存F(1)，second存F(2)，求完F(3)之后，将要求F(4)时，first，second交替向前变为first存F(2)，second存F(3)。具体见代码实现。
 
 #### 算法流程
 
 1. 创建常量MOD
 2. 创建变量first，初始化为F(0)，且first另一个含义为F(N)，初始的时候N=0
 3. 创建变量second，初始化为F(1)
-4. 创建变量third，用于暂存first+second的结果并辅助first与second交替向前
+4. 创建变量sum，用于暂存first+second的结果并辅助first与second交替向前
 5. 执行for循环
-   1. 求解third=(first+second)%MOD
-   2. 将second赋值给first，将third赋值给second，以实现first与second的交替向前
+   1. 求解sum=(first+second)%MOD
+   2. 将second赋值给first，将sum赋值给second，以实现first与second的交替向前
 6. 循环执行0次，first=F(0)，循环执行1次，first=F(1)，循环执行N次，first=F(N)，即返回first即可
 
 ### 代码实现
@@ -726,5 +726,70 @@ class Solution {
 
 时间复杂度：线性循环的时间复杂度为O(3*n)=O(n)，因此时间复杂度为O(n)
 
-空间复杂度：只有三个变量first，second，third，即空间复杂度为O(1)
+空间复杂度：只有三个变量first，second，sum，即空间复杂度为O(1)
+
+
+
+# 剑指 Offer 10- II. 青蛙跳台阶问题
+
+## 思路
+
+题目中说一个青蛙可以跳上1级台阶，也可以跳上2级台阶，第i级台阶可以由青蛙从第i-1级台阶跳1级跳到，也可以由青蛙从第i-2级台阶跳2级跳到。设F(N)为青蛙跳到第N级台阶的跳法，则显然F(N)可以由F(N-1)与F(N-2)推出，因此此题可以用动态规划求解。
+
+分别讨论动态规划的几个问题
+
+1. 状态的定义
+
+   定义F(N)为青蛙跳到第N级台阶的跳法
+
+2. 状态的转移方程
+
+   1. 当从第N-1跳1级台阶时，F(N) = F(N-1)
+   2. 当从第N-2跳2级台阶时，F(N) = F(N-2)
+   3. 综上，两者取和，可得到状态转移方程F(N) = F(N-1) + F(N-2),(N>1)
+
+3. 状态初始化
+
+   1. F(1) = 1，直接跳到1级台阶，所以F(1) = 1
+   2. F(0) = 1，因为青蛙跳到第2级台阶有两种方式，所以F(0)=F(2)-F(1) = 1，这个初始化需要注意
+
+从上面的状态转移方程我们可以看出，此题是斐波那契数列的实际应用题，仅在F(0)初始化时有所不同。
+
+### 算法流程
+
+1. 创建常量MOD
+2. 创建变量first，初始化为F(0)，且first另一个含义为F(N)，初始的时候N=0
+3. 创建变量second，初始化为F(1)
+4. 创建变量sum，用于暂存first+second的结果并辅助first与second交替向前
+5. 执行for循环
+   1. 求解sum=(first+second)%MOD
+   2. 将second赋值给first，将sum赋值给second，以实现first与second的交替向前
+6. 循环执行0次，first=F(0)，循环执行1次，first=F(1)，循环执行N次，first=F(N)，即返回first即可
+
+## 代码实现
+
+```java
+class Solution {
+    public int numWays(int n) {
+        final int MOD = 1000000007;
+        int first = 1;	//与斐波那契数列有所不同
+        int second = 1;
+        int sum = 1;
+        for (int i = 0; i < n; i++) {
+            sum = (first + second) % MOD;
+            first = second;
+            second = sum;
+        }
+        return first;
+    }
+}
+```
+
+![剑指 Offer 10- II. 青蛙跳台阶问题](\img\剑指 Offer 10- II. 青蛙跳台阶问题.jpg)
+
+## 复杂度分析
+
+时间复杂度：线性循环的时间复杂度为O(3*n)=O(n)，因此时间复杂度为O(n)
+
+空间复杂度：只有三个变量first，second，sum，即空间复杂度为O(1)
 
