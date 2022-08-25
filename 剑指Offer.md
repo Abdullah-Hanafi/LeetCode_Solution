@@ -864,7 +864,55 @@ class Solution {
 
 # 剑指 Offer 14-II. 剪绳子 II
 
+## 思路
 
+思路同上，唯一的区别在于，因为n的值较大，尽管用long型存储变量answer，在左power(3,a)幂运算的时候依然可能导致越界。
+
+因此，需要线性遍历a-1次，将3累乘a-1次，并且每次累乘都要取模，这样变不会越界。
+
+明明n = 3a + b，为什么累乘a-1次，而不累乘a次呢？因为当b = 1的时候，我们需要将最后两个长度为3和1的片段变成2和2的片段以使乘积最大。
+
+### 算法流程
+
+1. 边界考虑：当n <= 3时，直接返回n - 1
+2. 声明变量a = n / 3，变量b = n % 3
+3. 声明变量answer = 1
+4. for循环a - 1次，将3与answer累乘a - 1次，且每次累乘都要取模
+5. 如果b == 0，说明绳子被均分为a段长度为3的片段，即第a段是长度为3的片段，直接返回(int) (3 * answer % MOD)
+6. 如果b == 1，说明绳子最后一段是长度为1的片段，将第a段的3，与最后一段的1，变为两个长度为2的片段，返回(int) (answer * 2 * 2 % MOD);
+7. 如果b == 2，说明绳子最后一段是长度为2的片段，将第a段的3与最后一段的2相乘，返回(int) (answer * 3 * 2 % MOD);
+
+如图所示
+
+![剑指Offer14-II剪绳子II](img/剑指Offer14-II剪绳子II.jpg)
+
+## 代码实现
+
+```java
+class Solution {
+    public int cuttingRope(int n) {
+        final int MOD = 1000000007;
+        if (n <= 3) return n - 1;
+        int a = n / 3;
+        int b = n % 3;
+        long answer = 1;
+        for (int i = 0; i < a - 1; i++) {
+            answer = 3 * answer % MOD;
+        }
+        if (b == 0) return (int) (3 * answer % MOD);
+        if (b == 1) return (int) (answer * 4 % MOD);
+        return (int) (answer * 6 % MOD);
+    }
+}
+```
+
+时间复杂度：线性遍历，时间复杂度为O(n)
+
+空间复杂度：常量MOD、变量a、b、answer只使用常数大小的额外空间，空间复杂度为O(1)
+
+
+
+## 复杂度分析
 
 # 剑指 Offer 15. 二进制中1的个数
 
